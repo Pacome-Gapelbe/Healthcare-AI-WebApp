@@ -476,6 +476,67 @@ p
 #contact .form-control::-webkit-input-placeholder {
   color: #666;
 }
+
+/* Apply Dark Mode */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #1e1e1e;
+    border-bottom: 2px solid #ff10f0; /* Vibrant accent color */
+}
+
+.navbar a {
+    color: #e0e0e0 !important;
+}
+
+.navbar a:hover {
+    color: #ff10f0 !important;
+}
+
+/* Sections */
+#home, #service, #portfolio {
+    background-color: #1a1a1a;
+    padding: 60px 0;
+}
+
+/* Portfolio & Service Cards */
+.portfolio-thumb, .media {
+    background-color: #222;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.portfolio-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Buttons */
+.btn-default {
+    background-color: #e000e0; /* Default color */
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-default:hover {
+    background-color: #ff10f0; /* Change background on hover */
+    color: white; /* Keep text white */
+    text-decoration: none; /* Ensure no underline */
+}
+
+/* Footer */
+footer {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    padding: 20px;
+    text-align: center;
+}
+
 /* end contact */
 
 

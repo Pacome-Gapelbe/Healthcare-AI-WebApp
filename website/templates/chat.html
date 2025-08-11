@@ -1,0 +1,119 @@
+{% extends "disease_page.html" %}
+{% block content %}
+<div class="container-fluid p-0" style="background-color: #121212; color: white; min-height: 100vh;">
+    <div class="content-wrapper text-center">
+        <h1 class="wow fadeInDown" data-wow-delay="0.3s">Health Chatbot</h1>
+        <div class="row justify-content-center">
+            <!-- Description -->
+            <div class="col-md-8 wow fadeIn" data-wow-delay="0.6s">
+                <p class="lead">Welcome to the Health Chatbot! Ask anything related to health. <strong>Note:</strong> Not a substitute for medical advice.</p>
+                <hr>
+            </div>
+            <!-- Chat Box -->
+            <div class="col-md-8 wow fadeInUp" data-wow-delay="0.9s">
+                <div id="chat-box"></div>
+                <!-- Input Box -->
+                <div class="input-group">
+                    <input type="text" id="user-input" class="form-control" placeholder="Ask a health-related question...">
+                    <span class="input-group-btn">
+                        <button id="send-btn" class="btn btn-primary">
+                            <i class="fa fa-paper-plane"></i> Send
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    function addMessage(sender, message) {
+        const msg = document.createElement("div");
+        msg.classList.add("chat-message", sender === "user" ? "user-message" : "bot-message");
+        msg.innerHTML = `<strong>${sender === "user" ? "You" : "Bot"}:</strong> <span class="message-content"></span>`;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (sender === "bot") {
+            simulateTyping(msg.querySelector(".message-content"), message);
+        } else {
+            msg.querySelector(".message-content").textContent = message;
+        }
+    }
+
+    function showTypingIndicator() {
+        if (!document.getElementById("typing-indicator")) {
+            const typingIndicator = document.createElement("div");
+            typingIndicator.id = "typing-indicator";
+            typingIndicator.classList.add("chat-message", "bot-message");
+            typingIndicator.innerHTML = `<strong>Bot:</strong> <span class='dots'>Typing...</span>`;
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById("typing-indicator");
+        if (typingIndicator) typingIndicator.remove();
+    }
+
+    function simulateTyping(element, message, index = 0) {
+        if (index < message.length) {
+            element.textContent += message.charAt(index);
+            setTimeout(() => simulateTyping(element, message, index + 1), 30);
+        }
+    }
+
+    sendBtn.addEventListener("click", async () => {
+        const message = userInput.value.trim();
+        if (message) {
+            addMessage("user", message);
+            userInput.value = "";
+            showTypingIndicator();
+            try {
+                const response = await fetch("/chat_page", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message }),
+                });
+                const data = await response.json();
+                hideTypingIndicator();
+                addMessage("bot", data.reply);
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage("bot", "Error. Please try again.");
+            }
+        }
+    });
+
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendBtn.click();
+    });
+</script>
+
+<style>
+    h1 { color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
+    .lead { font-size: 1.25rem; color: white; }
+    hr { border-top: 2px solid white; width: 50%; margin: 20px auto; }
+    #chat-box {
+        height: 500px; overflow-y: auto; border: 1px solid #333;
+        padding: 20px; margin-bottom: 20px; background-color: #1e1e1e;
+        border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .chat-message {
+        margin-bottom: 15px; padding: 10px 15px; border-radius: 10px;
+        max-width: 70%; word-wrap: break-word;
+    }
+    .user-message { background-color: #e000e0; color: white; margin-left: auto; }
+    .bot-message { background-color: #333; color: white; margin-right: auto; }
+    #user-input { border-radius: 25px; padding: 10px 20px; font-size: 16px; background-color: #222; color: white; }
+    #send-btn { border-radius: 25px; padding: 10px 20px; background-color: #e000e0; border: none; }
+    #send-btn i { margin-right: 5px; }
+    .dots { animation: typing 1.5s infinite; }
+    @keyframes typing { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+</style>
+{% endblock %}

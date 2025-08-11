@@ -1,49 +1,118 @@
 {% extends "disease_page.html" %}
 {% block page %}
-  
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
 
-  <h2 class="pt-10 text-center">{{page}} Disease Prediction </h2>
-  
+<br><br><br>
 
-  <div style="width: 90%; margin: auto; text-align: center">
-  	{% if prediction == 0 %}
-      <img src="./static/images/happy.jpg" style ="max-width: 500px; max-height: 450px; margin-top: 30px; margin-bottom: 20px">
-      <br>
-      <br>
-      <p style="font-style: italic; font-size: 20px">No need to fear. You have no dangerous symptoms of the {{page}} disease</p>
-      <br>
-      <br>
-       <div class="prediction text-center">
-		    <a href="/" class="smoothScroll btn btn-success wow fadeInDown" data-wow-delay="2000">Back Home</a>
-	  	</div>
-      <br>
-      <br>
+<h2 class="pt-10 text-center text-white">{{ page }} Disease Prediction</h2>
 
-    {% elif prediction == 1 %}
-      <img src="./static/images/sad.png" style ="max-width: 500px; max-height: 450px; margin-top: 30px; margin-bottom: 20px">
-      <br>
-      <br>
-      <p style="font-style: italic; font-size: 20px">Sorry, it seems that you are in risk of getting {{page}} disease</p>
-      <br>
-      <br>
+<div class="container">
+    <div class="message-box">
+        <p id="loading">
+            <span id="dots">Analyzing</span>
+        </p>
 
+        <!-- AI Response (Initially Hidden) -->
+        <p id="message" class="ai-response"></p>
+    </div>
 
-      <div class="prediction text-center">
-		    <a href="/" class="smoothScroll btn btn-success wow fadeInDown" data-wow-delay="2000">Back Home</a>
-	  	</div>
+    <div class="prediction text-center">
+        <a href="/" class="smoothScroll btn btn-light wow fadeInDown" data-wow-delay="2000">Back Home</a>
+    </div>
+</div>
 
+<!-- Styles -->
+<style>
+    body {
+        background-color: #121212; /* Dark Background */
+        color: #e0e0e0; /* Light Text */
+        font-family: Arial, sans-serif;
+    }
 
-     {% endif %}
-  </div>
-  <br>
-  <br>
-  <br>
+    .container {
+        width: 60%;
+        margin: auto;
+        text-align: center;
+    }
 
-    
+    .message-box {
+        background: #1e1e1e; /* Darker Box */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        max-width: 500px;
+        margin: auto;
+        transition: 0.5s ease-in-out;
+        opacity: 0;
+    }
+
+    .ai-response {
+        font-size: 18px;
+        font-weight: 500;
+        font-style: italic;
+        color: #bb86fc; /* Soft Purple */
+        display: none;
+    }
+
+    #loading {
+        font-style: italic;
+        font-size: 20px;
+        color: #aaaaaa; /* Soft Gray */
+    }
+
+    .btn-light {
+        background-color: #bb86fc;
+        border: none;
+        color: black;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-light:hover {
+        background-color: #9f67e6;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    // Simulating Loading Animation
+    let dots = document.getElementById("dots");
+    let loadingInterval = setInterval(() => {
+        dots.textContent = dots.textContent.length >= 12 ? "Analyzing" : dots.textContent + ".";
+    }, 500);
+
+    // Simulating Typing Effect
+    function typeMessage(message, speed = 50) {
+        let index = 0;
+        let messageElement = document.getElementById("message");
+
+        function type() {
+            if (index < message.length) {
+                messageElement.innerHTML += message.charAt(index);
+                index++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    // Correctly escape and pass message as a safe JavaScript string
+    let aiMessage = {{ improved_message | tojson }};
+
+    // Start Typing After "Analyzing..."
+    setTimeout(() => {
+        clearInterval(loadingInterval);  // Stop "Analyzing..." animation
+        document.getElementById("loading").style.display = "none"; // Hide loading text
+        document.getElementById("message").style.display = "block"; // Show message area
+
+        // Fade in the box and type the message
+        let box = document.querySelector(".message-box");
+        box.style.opacity = "1";
+        typeMessage(aiMessage);
+    }, 2000); // Adjust delay based on API response time
+</script>
+
 {% endblock %}
