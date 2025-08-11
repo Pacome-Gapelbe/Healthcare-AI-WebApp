@@ -55,7 +55,15 @@ http://www.tooplate.com/view/2081-solution
 					<li><a href="#portfolio" class="smoothScroll">MODELS</a></li>
 					<li><a href="#contact" class="smoothScroll">CONTACT</a></li>
 					<li><a href="/chat_page" class="smoothScroll">CHAT WITH AI</a></li>
+					<li><a href="{{ url_for('prediction.show_predictions') }}">PREDICTIONS</a></li>
 
+
+					{% if current_user.is_authenticated %}
+						<li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
+					{% else %}
+						<li><a href="{{ url_for('auth.login') }}">LOGIN</a></li>
+						<li><a href="{{ url_for('auth.register') }}">REGISTER</a></li>
+					{% endif %}
 				</ul>
 			</div>
 		</div>
@@ -63,29 +71,28 @@ http://www.tooplate.com/view/2081-solution
 	<!-- end navigation -->
 
 	<!-- start home -->
-	<section id="home" class="text-center">
-		<div class="templatemo_headerimage">
-			<div class="flexslider">
-				<ul class="slides">
-					<li>
-						<img src="./static/images/home.jpg" alt="">
-						<div class="slider-caption">
-							<div class="templatemo_homewrapper">
-								<h1 class="wow fadeInDown" data-wow-delay="2000">AI, The Futur of Health</h1>
-								<h2 class="wow fadeInDown" data-wow-delay="2000">
-									<span>Work together to make the big healthcare world smaller</span>
-								</h2>
-								<a href="#service" class="smoothScroll btn btn-default wow fadeInDown"
-									data-wow-delay="2000">Our Work</a>
-							</div>
-						</div>
-					</li>
-
-				</ul>
-			</div>
-		</div>
-	</section>
-	<!-- end home -->
+<section id="home" class="text-center">
+  <div class="templatemo_headerimage">
+    <div class="flexslider">
+      <ul class="slides">
+        <li>
+          <img src="./static/images/home.jpg" alt="">
+          <div class="slider-caption">
+            <div class="templatemo_homewrapper">
+              {% block hero_content %}
+              <h1 class="wow fadeInDown" data-wow-delay="2000">AI, The Future of Health</h1>
+              <h2 class="wow fadeInDown" data-wow-delay="2000">
+                <span>Work together to make the big healthcare world smaller</span>
+              </h2>
+              <a href="#service" class="smoothScroll btn btn-default wow fadeInDown" data-wow-delay="2000">Our Work</a>
+              {% endblock %}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 	<!-- start service -->
 	<div id="service">

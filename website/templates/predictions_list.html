@@ -1,0 +1,50 @@
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div>
+    <h2 style="text-align: center;">Prediction Records</h2>
+    
+    <!-- Add export button -->
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('prediction.export_predictions') }}" class="btn btn-primary">
+        Export to Excel
+        </a>
+        <button type="button" onclick="window.history.back()" class="btn btn-primary" style="margin-right: 10px;">
+    Go Back
+    </button>
+    </div>
+
+    <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Disease Type</th>
+                <th>Input Data</th>
+                <th>Prediction Result</th>
+                <th>Original Message</th>
+                <th>Reworded Message</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pred in predictions %}
+            <tr>
+                <td>{{ pred.id }}</td>
+                <td>{{ pred.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ pred.disease_type }}</td>
+                <td><pre>{{ pred.input_data }}</pre></td>
+                <td>{{ pred.prediction_result }}</td>
+                <td>{{ pred.original_message }}</td>
+                <td>{{ pred.reworded_message }}</td>
+                <td>{{ pred.user_identifier or 'Anonymous' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No prediction records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endblock %}
