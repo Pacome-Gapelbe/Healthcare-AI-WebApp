@@ -18,7 +18,7 @@ STATIC_FOLDER = 'static'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-GEMINI_API_KEY = "AIzaSyCHD5ngEnf7_SbHhkwgDaOdTODIIN02jvM"
+GEMINI_API_KEY = os.getenv("Gemini_key")
 
 
 def reword_message(original_message):
